@@ -36,24 +36,62 @@ def train_bert_tokenizer():
     tokenizer = BertTokenizerFast.from_pretrained('bert-base-uncased')
     return tokenizer
 
+def load_bpe_tokenizer(tokenizer_path):
+    return Tokenizer.from_file(tokenizer_path)
+
+def load_wordpiece_tokenizer(tokenizer_path):
+    return Tokenizer.from_file(tokenizer_path)
+
+def load_unigram_tokenizer(tokenizer_path):
+    return Tokenizer.from_file(tokenizer_path)
+
+def load_sentencepiece_tokenizer(tokenizer_path):
+    return spm.SentencePieceProcessor(model_file=tokenizer_path)
+
+def load_bert_tokenizer(tokenizer_path):
+    return BertTokenizerFast.from_pretrained(tokenizer_path)
+
 def main():
-    parser = argparse.ArgumentParser(description="Train tokenization models")
-    parser.add_argument("--model", type=str, required=True, choices=["bpe", "wordpiece", "unigram", "sentencepiece", "bert"], help="The tokenization model to train")
-    parser.add_argument("--dataset", type=str, required=True, help="Path to the dataset file")
-    parser.add_argument("--output", type=str, required=True, help="Path to save the trained tokenizer")
+    parser = argparse.ArgumentParser(description="Train and use tokenization models")
+    parser.add_argument("--model", type=str, required=True, choices=["bpe", "wordpiece", "unigram", "sentencepiece", "bert"], help="The tokenization model to train or use")
+    parser.add_argument("--dataset", type=str, help="Path to the dataset file")
+    parser.add_argument("--output", type=str, help="Path to save the trained tokenizer")
+    parser.add_argument("--tokenizer", type=str, help="Path to the trained tokenizer")
+    parser.add_argument("--text", type=str, help="Text to tokenize")
     args = parser.parse_args()
 
-    if args.model == "bpe":
-        train_bpe_tokenizer(args.dataset, args.output)
-    elif args.model == "wordpiece":
-        train_wordpiece_tokenizer(args.dataset, args.output)
-    elif args.model == "unigram":
-        train_unigram_tokenizer(args.dataset, args.output)
-    elif args.model == "sentencepiece":
-        train_sentencepiece_tokenizer(args.dataset, args.output)
-    elif args.model == "bert":
-        tokenizer = train_bert_tokenizer()
-        tokenizer.save_pretrained(args.output)
+    if args.dataset and args.output:
+        if args.model == "bpe":
+            train_bpe_tokenizer(args.dataset, args.output)
+        elif args.model == "wordpiece":
+            train_wordpiece_tokenizer(args.dataset, args.output)
+        elif args.model == "unigram":
+            train_unigram_tokenizer(args.dataset, args.output)
+        elif args.model == "sentencepiece":
+            train_sentencepiece_tokenizer(args.dataset, args.output)
+        elif args.model == "bert":
+            tokenizer = train_bert_tokenizer()
+            tokenizer.save_pretrained(args.output)
+    elif args.tokenizer and args.text:
+        if args.model == "bpe":
+            tokenizer = load_bpe_tokenizer(args.tokenizer)
+        elif args.model == "wordpiece":
+            tokenizer = load_wordpiece_tokenizer(args.tokenizer)
+        elif args.model == "unigram":
+            tokenizer = load_unigram_tokenizer(args.tokenizer)
+        elif args.model == "sentencepiece":
+            tokenizer = load_sentencepiece_tokenizer(args.tokenizer)
+        elif args.model == "bert":
+            tokenizer = load_bert_tokenizer(args.tokenizer)
+
+        if args.model in ["bpe", "wordpiece", "unigram"]:
+            output = tokenizer.encode(args.text).tokens
+        elif args.model == "sentencepiece":
+            output = tokenizer.encode_as_pieces(args.text)
+        elif args.model == "bert":
+            output = tokenizer.encode(args.text)
+
+        print(output)
 
 if __name__ == "__main__":
     main()
