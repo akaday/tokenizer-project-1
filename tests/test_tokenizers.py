@@ -8,6 +8,7 @@ from tokenizers.trainers import BpeTrainer, WordPieceTrainer, UnigramTrainer
 from tokenizers.pre_tokenizers import Whitespace
 import sentencepiece as spm
 from transformers import BertTokenizerFast
+import tokenizer  # Import the C++ tokenizer module
 
 class TestTokenizers(unittest.TestCase):
 
@@ -124,6 +125,10 @@ class TestTokenizers(unittest.TestCase):
         requests.post("http://localhost:5000/train", json={"model": "bert", "dataset": self.dataset_path, "output": "tokenizer_bert"})
         response = requests.post("http://localhost:5000/tokenize", json={"model": "bert", "text": "This is a test.", "tokenizer_path": "tokenizer_bert"})
         self.assertIn("[CLS]", response.json()["tokens"])
+
+    def test_cpp_tokenizer(self):
+        output = tokenizer.tokenize("This is a test.")
+        self.assertIsInstance(output, list)
 
 if __name__ == "__main__":
     unittest.main()

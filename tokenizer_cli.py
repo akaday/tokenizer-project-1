@@ -7,6 +7,7 @@ from tokenizers.trainers import BpeTrainer, WordPieceTrainer, UnigramTrainer
 from tokenizers.pre_tokenizers import Whitespace
 from tokenizers.normalizers import NFD, StripAccents
 from tokenizers.processors import TemplateProcessing
+import tokenizer  # Import the C++ tokenizer module
 
 def train_bpe_tokenizer(dataset_path, output_path):
     tokenizer = Tokenizer(BPE())
@@ -53,7 +54,7 @@ def load_bert_tokenizer(tokenizer_path):
 
 def main():
     parser = argparse.ArgumentParser(description="Train and use tokenization models")
-    parser.add_argument("--model", type=str, required=True, choices=["bpe", "wordpiece", "unigram", "sentencepiece", "bert"], help="The tokenization model to train or use")
+    parser.add_argument("--model", type=str, required=True, choices=["bpe", "wordpiece", "unigram", "sentencepiece", "bert", "cpp"], help="The tokenization model to train or use")
     parser.add_argument("--dataset", type=str, help="Path to the dataset file")
     parser.add_argument("--output", type=str, help="Path to save the trained tokenizer")
     parser.add_argument("--tokenizer", type=str, help="Path to the trained tokenizer")
@@ -83,6 +84,10 @@ def main():
             tokenizer = load_sentencepiece_tokenizer(args.tokenizer)
         elif args.model == "bert":
             tokenizer = load_bert_tokenizer(args.tokenizer)
+        elif args.model == "cpp":
+            output = tokenizer.tokenize(args.text)
+            print(output)
+            return
 
         if args.model in ["bpe", "wordpiece", "unigram"]:
             output = tokenizer.encode(args.text).tokens
