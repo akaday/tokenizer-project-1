@@ -5,6 +5,7 @@ from tokenizers import Tokenizer
 from tokenizers.models import BPE, WordPiece, Unigram
 from tokenizers.trainers import BpeTrainer, WordPieceTrainer, UnigramTrainer
 from tokenizers.pre_tokenizers import Whitespace
+import tokenizer  # Import the C++ tokenizer module
 
 app = Flask(__name__)
 
@@ -89,6 +90,9 @@ def tokenize():
         tokenizer = load_sentencepiece_tokenizer(tokenizer_path)
     elif model == "bert":
         tokenizer = load_bert_tokenizer(tokenizer_path)
+    elif model == "cpp":
+        output = tokenizer.tokenize(text)
+        return jsonify({"tokens": output})
 
     if model in ["bpe", "wordpiece", "unigram"]:
         output = tokenizer.encode(text).tokens

@@ -191,3 +191,22 @@ node server.js
 1. Open your web browser and navigate to `http://localhost:3000`.
 2. Enter the text you want to tokenize in the textarea.
 3. Click the "Tokenize" button to see the tokenization results displayed in the result div.
+
+## Compilation du code C++
+
+Utilisez pybind11 pour compiler le code C++ en une bibliothèque partagée :
+
+```bash
+c++ -O3 -Wall -shared -std=c++11 -fPIC $(python3 -m pybind11 --includes) tokenizer.cpp -o tokenizer$(python3-config --extension-suffix)
+```
+
+## Utilisation du tokenizer C++ avec Python
+
+Importez le module C++ compilé dans votre code Python :
+
+```python
+import tokenizer
+
+def tokenize_text(text):
+    return tokenizer.tokenize(text)
+```
