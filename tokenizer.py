@@ -6,6 +6,7 @@ from tokenizers.normalizers import NFD, StripAccents
 from tokenizers.processors import TemplateProcessing
 import sentencepiece as spm
 from transformers import BertTokenizer, BertTokenizerFast
+import tokenizer  # Import the C++ tokenizer module
 
 # Initialiser le tokenizer BPE
 tokenizer_bpe = Tokenizer(BPE())
@@ -64,3 +65,7 @@ tokenizer_bert._tokenizer.post_processor = TemplateProcessing(
         ("[SEP]", tokenizer_bert.convert_tokens_to_ids("[SEP]")),
     ],
 )
+
+# Function to use the C++ tokenizer for tokenization
+def tokenize_with_cpp(text):
+    return tokenizer.tokenize(text)

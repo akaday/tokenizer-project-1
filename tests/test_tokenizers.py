@@ -130,5 +130,13 @@ class TestTokenizers(unittest.TestCase):
         output = tokenizer.tokenize("This is a test.")
         self.assertIsInstance(output, list)
 
+    def test_cli_cpp_tokenizer(self):
+        output = subprocess.check_output(["python", "tokenizer_cli.py", "--model", "cpp", "--text", "This is a test."])
+        self.assertIn("This", output.decode())
+
+    def test_web_cpp_tokenizer(self):
+        response = requests.post("http://localhost:5000/tokenize", json={"model": "cpp", "text": "This is a test."})
+        self.assertIn("This", response.json()["tokens"])
+
 if __name__ == "__main__":
     unittest.main()
