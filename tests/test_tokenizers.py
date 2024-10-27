@@ -77,5 +77,53 @@ class TestTokenizers(unittest.TestCase):
         self.assertIn("[CLS]", response.json()["tokens"])
         os.remove("tokenizer_bpe.json")
 
+    def test_cli_wordpiece_tokenizer(self):
+        subprocess.run(["python", "tokenizer_cli.py", "--model", "wordpiece", "--dataset", self.dataset_path, "--output", "tokenizer_wp.json"])
+        output = subprocess.check_output(["python", "tokenizer_cli.py", "--model", "wordpiece", "--tokenizer", "tokenizer_wp.json", "--text", "This is a test."])
+        self.assertIn("[CLS]", output.decode())
+        os.remove("tokenizer_wp.json")
+
+    def test_web_wordpiece_tokenizer(self):
+        requests.post("http://localhost:5000/train", json={"model": "wordpiece", "dataset": self.dataset_path, "output": "tokenizer_wp.json"})
+        response = requests.post("http://localhost:5000/tokenize", json={"model": "wordpiece", "text": "This is a test.", "tokenizer_path": "tokenizer_wp.json"})
+        self.assertIn("[CLS]", response.json()["tokens"])
+        os.remove("tokenizer_wp.json")
+
+    def test_cli_unigram_tokenizer(self):
+        subprocess.run(["python", "tokenizer_cli.py", "--model", "unigram", "--dataset", self.dataset_path, "--output", "tokenizer_unigram.json"])
+        output = subprocess.check_output(["python", "tokenizer_cli.py", "--model", "unigram", "--tokenizer", "tokenizer_unigram.json", "--text", "This is a test."])
+        self.assertIn("[CLS]", output.decode())
+        os.remove("tokenizer_unigram.json")
+
+    def test_web_unigram_tokenizer(self):
+        requests.post("http://localhost:5000/train", json={"model": "unigram", "dataset": self.dataset_path, "output": "tokenizer_unigram.json"})
+        response = requests.post("http://localhost:5000/tokenize", json={"model": "unigram", "text": "This is a test.", "tokenizer_path": "tokenizer_unigram.json"})
+        self.assertIn("[CLS]", response.json()["tokens"])
+        os.remove("tokenizer_unigram.json")
+
+    def test_cli_sentencepiece_tokenizer(self):
+        subprocess.run(["python", "tokenizer_cli.py", "--model", "sentencepiece", "--dataset", self.dataset_path, "--output", "tokenizer_sp"])
+        output = subprocess.check_output(["python", "tokenizer_cli.py", "--model", "sentencepiece", "--tokenizer", "tokenizer_sp.model", "--text", "This is a test."])
+        self.assertIn("[CLS]", output.decode())
+        os.remove("tokenizer_sp.model")
+        os.remove("tokenizer_sp.vocab")
+
+    def test_web_sentencepiece_tokenizer(self):
+        requests.post("http://localhost:5000/train", json={"model": "sentencepiece", "dataset": self.dataset_path, "output": "tokenizer_sp"})
+        response = requests.post("http://localhost:5000/tokenize", json={"model": "sentencepiece", "text": "This is a test.", "tokenizer_path": "tokenizer_sp.model"})
+        self.assertIn("[CLS]", response.json()["tokens"])
+        os.remove("tokenizer_sp.model")
+        os.remove("tokenizer_sp.vocab")
+
+    def test_cli_bert_tokenizer(self):
+        subprocess.run(["python", "tokenizer_cli.py", "--model", "bert", "--dataset", self.dataset_path, "--output", "tokenizer_bert"])
+        output = subprocess.check_output(["python", "tokenizer_cli.py", "--model", "bert", "--tokenizer", "tokenizer_bert", "--text", "This is a test."])
+        self.assertIn("[CLS]", output.decode())
+
+    def test_web_bert_tokenizer(self):
+        requests.post("http://localhost:5000/train", json={"model": "bert", "dataset": self.dataset_path, "output": "tokenizer_bert"})
+        response = requests.post("http://localhost:5000/tokenize", json={"model": "bert", "text": "This is a test.", "tokenizer_path": "tokenizer_bert"})
+        self.assertIn("[CLS]", response.json()["tokens"])
+
 if __name__ == "__main__":
     unittest.main()
