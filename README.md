@@ -180,3 +180,14 @@ curl -X POST http://localhost:5000/tokenize -H "Content-Type: application/json" 
   "text": "Ceci est un exemple de phrase."
 }'
 ```
+
+### Running the Server
+To run the server, navigate to the project directory and execute the following command:
+```bash
+node server.js
+```
+
+### Using the Web Interface
+1. Open your web browser and navigate to `http://localhost:3000`.
+2. Enter the text you want to tokenize in the textarea.
+3. Click the "Tokenize" button to see the tokenization results displayed in the result div.
