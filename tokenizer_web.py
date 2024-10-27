@@ -36,6 +36,21 @@ def train_bert_tokenizer():
     tokenizer = BertTokenizerFast.from_pretrained('bert-base-uncased')
     return tokenizer
 
+def load_bpe_tokenizer(tokenizer_path):
+    return Tokenizer.from_file(tokenizer_path)
+
+def load_wordpiece_tokenizer(tokenizer_path):
+    return Tokenizer.from_file(tokenizer_path)
+
+def load_unigram_tokenizer(tokenizer_path):
+    return Tokenizer.from_file(tokenizer_path)
+
+def load_sentencepiece_tokenizer(tokenizer_path):
+    return spm.SentencePieceProcessor(model_file=tokenizer_path)
+
+def load_bert_tokenizer(tokenizer_path):
+    return BertTokenizerFast.from_pretrained(tokenizer_path)
+
 @app.route('/train', methods=['POST'])
 def train_tokenizer():
     data = request.json
@@ -62,17 +77,18 @@ def tokenize():
     data = request.json
     model = data.get('model')
     text = data.get('text')
+    tokenizer_path = data.get('tokenizer_path')
 
     if model == "bpe":
-        tokenizer = Tokenizer.from_file("tokenizer_bpe.json")
+        tokenizer = load_bpe_tokenizer(tokenizer_path)
     elif model == "wordpiece":
-        tokenizer = Tokenizer.from_file("tokenizer_wp.json")
+        tokenizer = load_wordpiece_tokenizer(tokenizer_path)
     elif model == "unigram":
-        tokenizer = Tokenizer.from_file("tokenizer_unigram.json")
+        tokenizer = load_unigram_tokenizer(tokenizer_path)
     elif model == "sentencepiece":
-        tokenizer = spm.SentencePieceProcessor(model_file='tokenizer_sp.model')
+        tokenizer = load_sentencepiece_tokenizer(tokenizer_path)
     elif model == "bert":
-        tokenizer = BertTokenizerFast.from_pretrained('bert-base-uncased')
+        tokenizer = load_bert_tokenizer(tokenizer_path)
 
     if model in ["bpe", "wordpiece", "unigram"]:
         output = tokenizer.encode(text).tokens

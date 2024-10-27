@@ -130,3 +130,53 @@ tokenizer_bert = BertTokenizerFast.from_pretrained('bert-base-uncased')
 output = tokenizer_bert.encode("Ceci est un exemple de phrase.")
 print(output)
 ```
+
+## Utilisation des interfaces CLI et Web avec les nouveaux tokenizers
+
+### Interface CLI
+Vous pouvez utiliser les nouveaux tokenizers via l'interface en ligne de commande (CLI). Voici quelques exemples :
+
+#### Tokenizer BPE
+```bash
+python tokenizer_cli.py --model bpe --dataset path/to/your/dataset.txt --output tokenizer_bpe.json
+```
+
+#### Tokenizer WordPiece
+```bash
+python tokenizer_cli.py --model wordpiece --dataset path/to/your/dataset.txt --output tokenizer_wp.json
+```
+
+#### Tokenizer Unigram
+```bash
+python tokenizer_cli.py --model unigram --dataset path/to/your/dataset.txt --output tokenizer_unigram.json
+```
+
+#### Tokenizer SentencePiece
+```bash
+python tokenizer_cli.py --model sentencepiece --dataset path/to/your/dataset.txt --output tokenizer_sp
+```
+
+#### Tokenizer BERT
+```bash
+python tokenizer_cli.py --model bert --dataset path/to/your/dataset.txt --output tokenizer_bert
+```
+
+### Interface Web
+Vous pouvez également utiliser les nouveaux tokenizers via l'interface web. Voici quelques exemples d'utilisation des endpoints :
+
+#### Entraîner un tokenizer
+```bash
+curl -X POST http://localhost:5000/train -H "Content-Type: application/json" -d '{
+  "model": "bpe",
+  "dataset": "path/to/your/dataset.txt",
+  "output": "tokenizer_bpe.json"
+}'
+```
+
+#### Tokeniser un texte
+```bash
+curl -X POST http://localhost:5000/tokenize -H "Content-Type: application/json" -d '{
+  "model": "bpe",
+  "text": "Ceci est un exemple de phrase."
+}'
+```

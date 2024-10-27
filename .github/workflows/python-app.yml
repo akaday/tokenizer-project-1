@@ -37,3 +37,6 @@ jobs:
     - name: Test with pytest
       run: |
         pytest
+    - name: Run tokenizer tests
+      run: |
+        pytest tests/test_tokenizers.py
