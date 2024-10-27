@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tokenizer</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+    </style>
+</head>
+<body>
+    <h1>Text Tokenizer</h1>
+    <textarea id="textInput" rows="4" cols="50"></textarea><br>
+    <button onclick="sendText()">Tokenize</button>
+    <div id="result"></div>
+    <script>
+        async function sendText() {
+            const text = document.getElementById('textInput').value;
+            const response = await fetch('/tokenize', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text })
+            });
+            const result = await response.json();
+            document.getElementById('result').innerText = JSON.stringify(result.tokens, null, 2);
+        }
+    </script>
+</body>
+</html>
