@@ -1,4 +1,9 @@
 # Tokenizer Project
+## Support
+
+If you find this project helpful, consider buying me a coffee! Your support is greatly appreciated.
+
+[![Buy Me a Coffee](https://img.shields.io/badge/Donate-Buy%20Me%20a%20Coffee-yellow)](https://paypal.me/barki0)
 
 ## Description
 Ce projet est conçu pour fournir une implémentation rapide et efficace de tokenizers pour la recherche et la production. Il utilise des modèles de pointe pour le traitement du langage naturel (NLP).
